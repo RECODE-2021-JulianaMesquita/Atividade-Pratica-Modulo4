@@ -11,7 +11,7 @@ import java.util.ArrayList;
 
 @Entity
 @Table
-class Physics extends Login {
+public class Physics extends Login {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private int id;
