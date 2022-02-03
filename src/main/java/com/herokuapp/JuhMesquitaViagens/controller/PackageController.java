@@ -42,14 +42,14 @@ public class PackageController {
     // get pacote by id rest api
     @GetMapping("/packages/{id}")
     public ResponseEntity <Package> getPackageById(@PathVariable Long id) {
-        Package packageId = packageRepository.findById(id).orElseThrow(() - > new ResourceNotFoundException("Não existe no banco de dados o pacote com o id=" + id));
+        Package packageId = packageRepository.findById(id).orElseThrow(() -> new ResourceNotFoundException("Não existe no banco de dados o pacote com o id=" + id));
         return ResponseEntity.ok(packageId);
     }
 
     // update pacote rest api
     @PutMapping("/packages/{id}")
      public ResponseEntity <Package> updatePackage(@PathVariable Long id, @RequestBody Package packageDetails) {
-        Package packageEdit = packageRepository.findById(id).orElseThrow(() - > new ResourceNotFoundException("Não existe no banco de dados o pacote com o id=" + id));
+        Package packageEdit = packageRepository.findById(id).orElseThrow(() -> new ResourceNotFoundException("Não existe no banco de dados o pacote com o id=" + id));
  
         packageEdit.setTitle(packageDetails.getTitle());
         packageEdit.setIdAddressDestiny(packageDetails.getIdAddressDestiny());
@@ -68,7 +68,7 @@ public class PackageController {
     // delete pacote rest api
     @DeleteMapping("/packages/{id}")
     public ResponseEntity<Map<String,Boolean>>deletePackage(@PathVariable Long id) {
-        Package packageDelete = packageRepository.findById(id).orElseThrow(() - > new ResourceNotFoundException("Não existe no banco de dados o pacote com o id =:" + id));
+        Package packageDelete = packageRepository.findById(id).orElseThrow(() -> new ResourceNotFoundException("Não existe no banco de dados o pacote com o id =:" + id));
         packageRepository.delete(packageDelete);
         Map < String, Boolean > response = new HashMap < > ();
         response.put("deleted", Boolean.TRUE);

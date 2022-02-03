@@ -42,14 +42,14 @@ public class AddressController {
     // get endereço by id rest api
     @GetMapping("/address/{id}")
     public ResponseEntity <Address> getAddressById(@PathVariable Long id) {
-        Address addressId = addressRepository.findById(id).orElseThrow(() - > new ResourceNotFoundException("Não existe no banco de dados o endereço com o id = " + id));
+        Address addressId = addressRepository.findById(id).orElseThrow(() -> new ResourceNotFoundException("Não existe no banco de dados o endereço com o id = " + id));
         return ResponseEntity.ok(addressId);
     }
 
     // update endereço rest api
     @PutMapping("/address/{id}")
      public ResponseEntity <Address> updatePackage(@PathVariable Long id, @RequestBody Address addressDetails) {
-        Address addressEdit = addressRepository.findById(id).orElseThrow(() - > new ResourceNotFoundException("Não existe no banco de dados o endereço com o id = " + id));
+        Address addressEdit = addressRepository.findById(id).orElseThrow(() ->  new ResourceNotFoundException("Não existe no banco de dados o endereço com o id = " + id));
  
         addressEdit.setState(addressDetails.getState());
         addressEdit.setCountry(addressDetails.getCountry());
@@ -62,7 +62,7 @@ public class AddressController {
      // delete endereço rest api
     @DeleteMapping("/packages/{id}")
     public ResponseEntity<Map<String,Boolean>>deletePackage(@PathVariable Long id) {
-        Address addressDelete = addressRepository.findById(id).orElseThrow(() - > new ResourceNotFoundException("Não existe no banco de dados o endereço com o id = " + id));
+        Address addressDelete = addressRepository.findById(id).orElseThrow(() -> new ResourceNotFoundException("Não existe no banco de dados o endereço com o id = " + id));
         addressRepository.delete(addressDelete);
         Map < String, Boolean > response = new HashMap < > ();
         response.put("deleted", Boolean.TRUE);

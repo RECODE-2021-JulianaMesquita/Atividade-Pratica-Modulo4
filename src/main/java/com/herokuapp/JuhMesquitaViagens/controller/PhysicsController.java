@@ -42,20 +42,30 @@ public class PhysicsController {
     // get pessoa física by id rest api
     @GetMapping("/physics/{id}")
     public ResponseEntity <Physics> getLoginById(@PathVariable Long id) {
-        Physics physicsId = physicsRepository.findById(id).orElseThrow(() - > new ResourceNotFoundException("Não existe no banco de dados pessoa física com o id = "  + id));
+        Physics physicsId = physicsRepository.findById(id).orElseThrow(() -> new ResourceNotFoundException("Não existe no banco de dados pessoa física com o id = "  + id));
         return ResponseEntity.ok(physicsId);
     }
 
     // update usuario rest api
     @PutMapping("/physics/{id}")
      public ResponseEntity <Physics> updateLogin(@PathVariable Long id, @RequestBody Physics physicsDetails) {
-        Physics physicsEdit = physicsRepository.findById(id).orElseThrow(() - > new ResourceNotFoundException("Não existe no banco de dados usuario com o id = "  + id));
+        Physics physicsEdit = physicsRepository.findById(id).orElseThrow(() -> new ResourceNotFoundException("Não existe no banco de dados usuario com o id = "  + id));
  
         physicsEdit.setCpf(physicsDetails.getCpf());
         physicsEdit.setPackages(physicsDetails.getPackages());
 
         Physics updatedPhysics = physicsRepository.save(physicsEdit);
         return ResponseEntity.ok(updatedPhysics);
+    }
+
+    // delete usuario rest api
+    @DeleteMapping("/physics/{id}")
+    public ResponseEntity<Map<String,Boolean>>deletePhysics(@PathVariable Long id) {
+        Physics physicsDelete = physicsRepository.findById(id).orElseThrow(() -> new ResourceNotFoundException("Não existe no banco de dados usuario com o id = " + id));
+        physicsRepository.delete(physicsDelete);
+        Map < String, Boolean > response = new HashMap < > ();
+        response.put("deleted", Boolean.TRUE);
+        return ResponseEntity.ok(response);
     }
 
 }

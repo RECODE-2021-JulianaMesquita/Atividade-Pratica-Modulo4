@@ -42,14 +42,14 @@ public class LoginController {
     // get usuario by id rest api
     @GetMapping("/login/{id}")
     public ResponseEntity <Login> getLoginById(@PathVariable Long id) {
-        Login loginId = loginRepository.findById(id).orElseThrow(() - > new ResourceNotFoundException("Não existe no banco de dados usuario com o id = "  + id));
+        Login loginId = loginRepository.findById(id).orElseThrow(() -> new ResourceNotFoundException("Não existe no banco de dados usuario com o id = "  + id));
         return ResponseEntity.ok(loginId);
     }
 
     // update usuario rest api
     @PutMapping("/login/{id}")
      public ResponseEntity <Login> updateLogin(@PathVariable Long id, @RequestBody Login loginDetails) {
-        Login loginEdit = loginRepository.findById(id).orElseThrow(() - > new ResourceNotFoundException("Não existe no banco de dados usuario com o id = "  + id));
+        Login loginEdit = loginRepository.findById(id).orElseThrow(() -> new ResourceNotFoundException("Não existe no banco de dados usuario com o id = "  + id));
  
         loginEdit.setIdAddress(loginDetails.getIdAddress());
         loginEdit.setName(loginDetails.getName());
@@ -65,7 +65,7 @@ public class LoginController {
      // delete usuario rest api
      @DeleteMapping("/login/{id}")
      public ResponseEntity<Map<String,Boolean>>deletePackage(@PathVariable Long id) {
-        Login loginDelete = loginRepository.findById(id).orElseThrow(() - > new ResourceNotFoundException("Não existe no banco de dados usuario com o id = " + id));
+        Login loginDelete = loginRepository.findById(id).orElseThrow(() -> new ResourceNotFoundException("Não existe no banco de dados usuario com o id = " + id));
         loginRepository.delete(loginDelete);
          Map < String, Boolean > response = new HashMap < > ();
          response.put("deleted", Boolean.TRUE);
