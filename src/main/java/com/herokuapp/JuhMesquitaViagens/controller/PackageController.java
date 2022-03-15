@@ -20,21 +20,21 @@ import com.herokuapp.JuhMesquitaViagens.exception.ResourceNotFoundException;
 import com.herokuapp.JuhMesquitaViagens.model.Package;
 import com.herokuapp.JuhMesquitaViagens.repository.PackageRepository;
 
-@CrossOrigin(origins = "http://localhost:3000")
+@CrossOrigin(origins = "https://juhmesquitaviagens-front-end.herokuapp.com")
 @RestController
-@RequestMapping("/api/v1/")
+@RequestMapping("packages")
 public class PackageController {
     @Autowired
     private PackageRepository packageRepository;
 
     // get all pacotes
-    @GetMapping("/packages")
+    @GetMapping("/allpackages")
     public List<Package> getAllPackages() {
         return packageRepository.findAll();
     }
 
     // create pacote rest api
-    @PostMapping("/packages")
+    @PostMapping("/create")
     public Package createPackage(@RequestBody Package createPackage) {
         return packageRepository.save(createPackage);
     }

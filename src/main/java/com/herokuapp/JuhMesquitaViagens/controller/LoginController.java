@@ -20,21 +20,21 @@ import com.herokuapp.JuhMesquitaViagens.exception.ResourceNotFoundException;
 import com.herokuapp.JuhMesquitaViagens.model.Login;
 import com.herokuapp.JuhMesquitaViagens.repository.LoginRepository;
 
-@CrossOrigin(origins = "http://localhost:3000")
+@CrossOrigin(origins = "https://juhmesquitaviagens-front-end.herokuapp.com")
 @RestController
-@RequestMapping("/api/v1/")
+@RequestMapping("/login")
 public class LoginController {
     @Autowired
     private LoginRepository loginRepository;
 
     // get all usuarios cadastrados
-    @GetMapping("/login")
+    @GetMapping("/alllogin")
     public List<Login> getAllLogin() {
         return loginRepository.findAll();
     }
 
     // create usuario rest api
-    @PostMapping("/login")
+    @PostMapping("/create")
     public Login createLogin(@RequestBody Login createLogin) {
         return loginRepository.save(createLogin);
     }

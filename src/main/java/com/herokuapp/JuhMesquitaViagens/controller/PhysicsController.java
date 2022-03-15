@@ -20,21 +20,21 @@ import com.herokuapp.JuhMesquitaViagens.exception.ResourceNotFoundException;
 import com.herokuapp.JuhMesquitaViagens.model.Physics;
 import com.herokuapp.JuhMesquitaViagens.repository.PhysicsRepository;
 
-@CrossOrigin(origins = "http://localhost:3000")
+@CrossOrigin(origins = "https://juhmesquitaviagens-front-end.herokuapp.com")
 @RestController
-@RequestMapping("/api/v1/")
+@RequestMapping("/physics")
 public class PhysicsController {
     @Autowired
     private PhysicsRepository physicsRepository;
 
     // get all pessoas físicas cadastrados
-    @GetMapping("/physics")
+    @GetMapping("/allphysics")
     public List<Physics> getAllPhysics() {
         return physicsRepository.findAll();
     }
 
     // create pessoa física rest api
-    @PostMapping("/physics")
+    @PostMapping("/create")
     public Physics createLogin(@RequestBody Physics createPhysics) {
         return physicsRepository.save(createPhysics);
     }

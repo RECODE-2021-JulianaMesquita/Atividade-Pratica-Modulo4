@@ -20,21 +20,21 @@ import com.herokuapp.JuhMesquitaViagens.exception.ResourceNotFoundException;
 import com.herokuapp.JuhMesquitaViagens.model.Legal;
 import com.herokuapp.JuhMesquitaViagens.repository.LegalRepository;
 
-@CrossOrigin(origins = "http://localhost:3000")
+@CrossOrigin(origins = "https://juhmesquitaviagens-front-end.herokuapp.com")
 @RestController
-@RequestMapping("/api/v1/")
+@RequestMapping("legal")
 public class LegalController {
     @Autowired
     private LegalRepository legalRepository;
 
     // get all empresas cadastradas
-    @GetMapping("/legal")
+    @GetMapping("/alllegal")
     public List<Legal> getAllLegal() {
         return legalRepository.findAll();
     }
 
     // create empresa rest api
-    @PostMapping("/legal")
+    @PostMapping("/create")
     public Legal createLogin(@RequestBody Legal createLegal) {
         return legalRepository.save(createLegal);
     }
