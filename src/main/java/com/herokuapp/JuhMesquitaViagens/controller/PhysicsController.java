@@ -24,48 +24,58 @@ import com.herokuapp.JuhMesquitaViagens.repository.PhysicsRepository;
 @RestController
 @RequestMapping("/physics")
 public class PhysicsController {
-    @Autowired
-    private PhysicsRepository physicsRepository;
-
-    // get all pessoas físicas cadastrados
-    @GetMapping("/allphysics")
-    public List<Physics> getAllPhysics() {
-        return physicsRepository.findAll();
-    }
-
-    // create pessoa física rest api
-    @PostMapping("/create")
-    public Physics createLogin(@RequestBody Physics createPhysics) {
-        return physicsRepository.save(createPhysics);
-    }
-
-    // get pessoa física by id rest api
-    @GetMapping("/physics/{id}")
-    public ResponseEntity <Physics> getLoginById(@PathVariable int id) {
-        Physics physicsId = physicsRepository.findById(id).orElseThrow(() -> new ResourceNotFoundException("Não existe no banco de dados pessoa física com o id = "  + id));
-        return ResponseEntity.ok(physicsId);
-    }
-
-    // update usuario rest api
-    @PutMapping("/physics/{id}")
-     public ResponseEntity <Physics> updateLogin(@PathVariable int id, @RequestBody Physics physicsDetails) {
-        Physics physicsEdit = physicsRepository.findById(id).orElseThrow(() -> new ResourceNotFoundException("Não existe no banco de dados usuario com o id = "  + id));
- 
-        physicsEdit.setCpf(physicsDetails.getCpf());
-        physicsEdit.setPackages(physicsDetails.getPackages());
-
-        Physics updatedPhysics = physicsRepository.save(physicsEdit);
-        return ResponseEntity.ok(updatedPhysics);
-    }
-
-    // delete usuario rest api
-    @DeleteMapping("/physics/{id}")
-    public ResponseEntity<Map<String,Boolean>>deletePhysics(@PathVariable int id) {
-        Physics physicsDelete = physicsRepository.findById(id).orElseThrow(() -> new ResourceNotFoundException("Não existe no banco de dados usuario com o id = " + id));
-        physicsRepository.delete(physicsDelete);
-        Map < String, Boolean > response = new HashMap < > ();
-        response.put("deleted", Boolean.TRUE);
-        return ResponseEntity.ok(response);
-    }
+	@Autowired
+	private PhysicsRepository physicsRepository;
+	
+	// get all physicss
+	@GetMapping("/physics")
+	public List<Physics> getAllPhysicss(){
+		return physicsRepository.findAll();
+	}		
+	
+	// create physics rest api
+	@PostMapping("/physics")
+	public Physics createPhysics(@RequestBody Physics physics) {
+		return physicsRepository.save(physics);
+	}
+	
+	// get physics by id rest api
+	@GetMapping("/physics/{id}")
+	public ResponseEntity<Physics> getPhysicsById(@PathVariable int id) {
+		Physics physics = physicsRepository.findById(id)
+				.orElseThrow(() -> new ResourceNotFoundException("Physics not exist with id :" + id));
+		return ResponseEntity.ok(physics);
+	}
+	
+	// update physics rest api
+	
+	@PutMapping("/physics/{id}")
+	public ResponseEntity<Physics> updatePhysics(@PathVariable int id, @RequestBody Physics physicsDetails){
+		Physics physics = physicsRepository.findById(id)
+				.orElseThrow(() -> new ResourceNotFoundException("Physics not exist with id :" + id));
+		
+		physics.setAddress(physicsDetails.getAddress());
+		physics.setName(physicsDetails.getName());
+		physics.setEmail(physicsDetails.getEmail());
+		physics.setPassword(physicsDetails.getPassword());
+		physics.setPhone(physicsDetails.getPhone());
+		physics.setAdministrator(physicsDetails.isAdministrator());
+		physics.setCpf(physicsDetails.getCpf());
+		physics.setPackages(physicsDetails.getPackages());
+		Physics updatedPhysics = physicsRepository.save(physics);
+		return ResponseEntity.ok(updatedPhysics);
+	}
+	
+	// delete physics rest api
+	@DeleteMapping("/physics/{id}")
+	public ResponseEntity<Map<String, Boolean>> deletePhysics(@PathVariable int id){
+		Physics physics = physicsRepository.findById(id)
+				.orElseThrow(() -> new ResourceNotFoundException("Physics not exist with id :" + id));
+		
+		physicsRepository.delete(physics);
+		Map<String, Boolean> response = new HashMap<>();
+		response.put("deleted", Boolean.TRUE);
+		return ResponseEntity.ok(response);
+	}
 
 }

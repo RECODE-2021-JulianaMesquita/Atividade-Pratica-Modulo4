@@ -24,47 +24,57 @@ import com.herokuapp.JuhMesquitaViagens.repository.LegalRepository;
 @RestController
 @RequestMapping("legal")
 public class LegalController {
-    @Autowired
-    private LegalRepository legalRepository;
-
-    // get all empresas cadastradas
-    @GetMapping("/alllegal")
-    public List<Legal> getAllLegal() {
-        return legalRepository.findAll();
-    }
-
-    // create empresa rest api
-    @PostMapping("/create")
-    public Legal createLogin(@RequestBody Legal createLegal) {
-        return legalRepository.save(createLegal);
-    }
-
-    // get empresa by id rest api
-    @GetMapping("/legal/{id}")
-    public ResponseEntity <Legal> getLoginById(@PathVariable int id) {
-        Legal legalId = legalRepository.findById(id).orElseThrow(() -> new ResourceNotFoundException("Não existe no banco de dados empresa com o id = "  + id));
-        return ResponseEntity.ok(legalId);
-    }
-
-    // update usuario rest api
-    @PutMapping("/legal/{id}")
-     public ResponseEntity <Legal> updateLegal(@PathVariable int id, @RequestBody Legal legalDetails) {
-        Legal legalEdit = legalRepository.findById(id).orElseThrow(() -> new ResourceNotFoundException("Não existe no banco de dados empresa com o id = "  + id));
- 
-        legalEdit.setCnpj(legalDetails.getCnpj());
-
-        Legal updatedLegal = legalRepository.save(legalEdit);
-        return ResponseEntity.ok(updatedLegal);
-    }
-
-    // delete empresa rest api
-    @DeleteMapping("/legal/{id}")
-    public ResponseEntity<Map<String,Boolean>>deleteLegal(@PathVariable int id) {
-        Legal legalDelete = legalRepository.findById(id).orElseThrow(() -> new ResourceNotFoundException("Não existe no banco de dados empresa com o id = " + id));
-        legalRepository.delete(legalDelete);
-        Map < String, Boolean > response = new HashMap < > ();
-        response.put("deleted", Boolean.TRUE);
-        return ResponseEntity.ok(response);
-    }
+	@Autowired
+	private LegalRepository legalRepository;
+	
+	// get all legals
+	@GetMapping("/legals")
+	public List<Legal> getAllLegals(){
+		return legalRepository.findAll();
+	}		
+	
+	// create legal rest api
+	@PostMapping("/legals")
+	public Legal createLegal(@RequestBody Legal legal) {
+		return legalRepository.save(legal);
+	}
+	
+	// get legal by id rest api
+	@GetMapping("/legals/{id}")
+	public ResponseEntity<Legal> getLegalById(@PathVariable int id) {
+		Legal legal = legalRepository.findById(id)
+				.orElseThrow(() -> new ResourceNotFoundException("Legal not exist with id :" + id));
+		return ResponseEntity.ok(legal);
+	}
+	
+	// update legal rest api
+	
+	@PutMapping("/legals/{id}")
+	public ResponseEntity<Legal> updateLegal(@PathVariable int id, @RequestBody Legal legalDetails){
+		Legal legal = legalRepository.findById(id)
+				.orElseThrow(() -> new ResourceNotFoundException("Legal not exist with id :" + id));
+		
+		legal.setAddress(legalDetails.getAddress());
+		legal.setName(legalDetails.getName());
+		legal.setEmail(legalDetails.getEmail());
+		legal.setPassword(legalDetails.getPassword());
+		legal.setPhone(legalDetails.getPhone());
+		legal.setAdministrator(legalDetails.isAdministrator());
+		legal.setCnpj(legalDetails.getCnpj());
+		Legal updatedLegal = legalRepository.save(legal);
+		return ResponseEntity.ok(updatedLegal);
+	}
+	
+	// delete legal rest api
+	@DeleteMapping("/legals/{id}")
+	public ResponseEntity<Map<String, Boolean>> deleteLegal(@PathVariable int id){
+		Legal legal = legalRepository.findById(id)
+				.orElseThrow(() -> new ResourceNotFoundException("Legal not exist with id :" + id));
+		
+		legalRepository.delete(legal);
+		Map<String, Boolean> response = new HashMap<>();
+		response.put("deleted", Boolean.TRUE);
+		return ResponseEntity.ok(response);
+	}
 
 }

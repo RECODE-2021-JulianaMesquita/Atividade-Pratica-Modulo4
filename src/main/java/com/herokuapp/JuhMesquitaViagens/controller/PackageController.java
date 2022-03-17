@@ -22,57 +22,58 @@ import com.herokuapp.JuhMesquitaViagens.repository.PackageRepository;
 
 @CrossOrigin(origins = "https://juhmesquitaviagens-front-end.herokuapp.com")
 @RestController
-@RequestMapping("packages")
+@RequestMapping("packageTravels")
 public class PackageController {
-    @Autowired
-    private PackageRepository packageRepository;
-
-    // get all pacotes
-    @GetMapping("/allpackages")
-    public List<Package> getAllPackages() {
-        return packageRepository.findAll();
-    }
-
-    // create pacote rest api
-    @PostMapping("/create")
-    public Package createPackage(@RequestBody Package createPackage) {
-        return packageRepository.save(createPackage);
-    }
-
-    // get pacote by id rest api
-    @GetMapping("/packages/{id}")
-    public ResponseEntity <Package> getPackageById(@PathVariable int id) {
-        Package packageId = packageRepository.findById(id).orElseThrow(() -> new ResourceNotFoundException("Não existe no banco de dados o pacote com o id=" + id));
-        return ResponseEntity.ok(packageId);
-    }
-
-    // update pacote rest api
-    @PutMapping("/packages/{id}")
-     public ResponseEntity <Package> updatePackage(@PathVariable int id, @RequestBody Package packageDetails) {
-        Package packageEdit = packageRepository.findById(id).orElseThrow(() -> new ResourceNotFoundException("Não existe no banco de dados o pacote com o id=" + id));
- 
-        packageEdit.setTitle(packageDetails.getTitle());
-        packageEdit.setAddressDestiny(packageDetails.getAddressDestiny());
-        packageEdit.setAddressOrigin(packageDetails.getAddressOrigin());
-        packageEdit.setIdLegal(packageDetails.getIdLegal());
-        packageEdit.setPeople(packageDetails.getPeople());
-        packageEdit.setValue(packageDetails.getValue());
-        packageEdit.setPromotion(packageDetails.isPromotion());
-        packageEdit.setDateGoing(packageDetails.getDateGoing());
-        packageEdit.setDateReturn(packageDetails.getDateReturn());
- 
-         Package updatedPackage = packageRepository.save(packageEdit);
-         return ResponseEntity.ok(updatedPackage);
-     }
-
-    // delete pacote rest api
-    @DeleteMapping("/packages/{id}")
-    public ResponseEntity<Map<String,Boolean>>deletePackage(@PathVariable int id) {
-        Package packageDelete = packageRepository.findById(id).orElseThrow(() -> new ResourceNotFoundException("Não existe no banco de dados o pacote com o id =:" + id));
-        packageRepository.delete(packageDelete);
-        Map < String, Boolean > response = new HashMap < > ();
-        response.put("deleted", Boolean.TRUE);
-        return ResponseEntity.ok(response);
-    }
-
+	@Autowired
+	private PackageRepository packageTravelRepository;
+	
+	// get all packageTravels
+	@GetMapping("/packageTravels")
+	public List<Package> getAllPackages(){
+		return packageTravelRepository.findAll();
+	}		
+	
+	// create packageTravel rest api
+	@PostMapping("/packageTravels")
+	public Package createPackage(@RequestBody Package packageTravel) {
+		return packageTravelRepository.save(packageTravel);
+	}
+	
+	// get packageTravel by id rest api
+	@GetMapping("/packageTravels/{id}")
+	public ResponseEntity<Package> getPackageById(@PathVariable int id) {
+		Package packageTravel = packageTravelRepository.findById(id)
+				.orElseThrow(() -> new ResourceNotFoundException("Package not exist with id :" + id));
+		return ResponseEntity.ok(packageTravel);
+	}
+	
+	// update packageTravel rest api
+	
+	@PutMapping("/packageTravels/{id}")
+	public ResponseEntity<Package> updatePackage(@PathVariable int id, @RequestBody Package packageTravelDetails){
+		Package packageTravel = packageTravelRepository.findById(id)
+				.orElseThrow(() -> new ResourceNotFoundException("Package not exist with id :" + id));
+		packageTravel.setAddressDestiny(packageTravelDetails.getAddressDestiny());
+		packageTravel.setAddressOrigin(packageTravelDetails.getAddressOrigin());
+		packageTravel.setTitle(packageTravelDetails.getTitle());
+		packageTravel.setPeople(packageTravelDetails.getPeople());
+		packageTravel.setValue(packageTravelDetails.getValue());
+		packageTravel.setPromotion(packageTravelDetails.isPromotion());
+		packageTravel.setDateGoing(packageTravelDetails.getDateGoing());
+		packageTravel.setDateReturn(packageTravelDetails.getDateReturn());
+		Package updatedPackage = packageTravelRepository.save(packageTravel);
+		return ResponseEntity.ok(updatedPackage);
+	}
+	
+	// delete packageTravel rest api
+	@DeleteMapping("/packageTravels/{id}")
+	public ResponseEntity<Map<String, Boolean>> deletePackage(@PathVariable int id){
+		Package packageTravel = packageTravelRepository.findById(id)
+				.orElseThrow(() -> new ResourceNotFoundException("Package not exist with id :" + id));
+		
+		packageTravelRepository.delete(packageTravel);
+		Map<String, Boolean> response = new HashMap<>();
+		response.put("deleted", Boolean.TRUE);
+		return ResponseEntity.ok(response);
+	}
 }

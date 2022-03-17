@@ -24,52 +24,54 @@ import com.herokuapp.JuhMesquitaViagens.repository.LoginRepository;
 @RestController
 @RequestMapping("/login")
 public class LoginController {
-    @Autowired
-    private LoginRepository loginRepository;
-
-    // get all usuarios cadastrados
-    @GetMapping("/alllogin")
-    public List<Login> getAllLogin() {
-        return loginRepository.findAll();
-    }
-
-    // create usuario rest api
-    @PostMapping("/create")
-    public Login createLogin(@RequestBody Login createLogin) {
-        return loginRepository.save(createLogin);
-    }
-
-    // get usuario by id rest api
-    @GetMapping("/login/{id}")
-    public ResponseEntity <Login> getLoginById(@PathVariable int id) {
-        Login loginId = loginRepository.findById(id).orElseThrow(() -> new ResourceNotFoundException("Não existe no banco de dados usuario com o id = "  + id));
-        return ResponseEntity.ok(loginId);
-    }
-
-    // update usuario rest api
-    @PutMapping("/login/{id}")
-     public ResponseEntity <Login> updateLogin(@PathVariable int id, @RequestBody Login loginDetails) {
-        Login loginEdit = loginRepository.findById(id).orElseThrow(() -> new ResourceNotFoundException("Não existe no banco de dados usuario com o id = "  + id));
- 
-        loginEdit.setAddress(loginDetails.getAddress());
-        loginEdit.setName(loginDetails.getName());
-        loginEdit.setEmail(loginDetails.getEmail());
-        loginEdit.setPassword(loginDetails.getPassword());
-        loginEdit.setPhone(loginDetails.getPhone());
-        loginEdit.setAdministrator(loginDetails.isAdministrator());
-
-        Login updatedlogin = loginRepository.save(loginEdit);
-        return ResponseEntity.ok(updatedlogin);
-    }
-
-     // delete usuario rest api
-     @DeleteMapping("/login/{id}")
-     public ResponseEntity<Map<String,Boolean>>deletePackage(@PathVariable int id) {
-        Login loginDelete = loginRepository.findById(id).orElseThrow(() -> new ResourceNotFoundException("Não existe no banco de dados usuario com o id = " + id));
-        loginRepository.delete(loginDelete);
-         Map < String, Boolean > response = new HashMap < > ();
-         response.put("deleted", Boolean.TRUE);
-         return ResponseEntity.ok(response);
-     }
-
+	@Autowired
+	private LoginRepository loginRepository;
+	
+	// get all logins
+	@GetMapping("/login")
+	public List<Login> getAllLogins(){
+		return loginRepository.findAll();
+	}		
+	
+	// create login rest api
+	@PostMapping("/login")
+	public Login createLogin(@RequestBody Login login) {
+		return loginRepository.save(login);
+	}
+	
+	// get login by id rest api
+	@GetMapping("/login/{id}")
+	public ResponseEntity<Login> getLoginById(@PathVariable int id) {
+		Login login = loginRepository.findById(id)
+				.orElseThrow(() -> new ResourceNotFoundException("Login not exist with id :" + id));
+		return ResponseEntity.ok(login);
+	}
+	
+	// update login rest api	
+	@PutMapping("/login/{id}")
+	public ResponseEntity<Login> updateLogin(@PathVariable int id, @RequestBody Login loginDetails){
+		Login login = loginRepository.findById(id)
+				.orElseThrow(() -> new ResourceNotFoundException("Login not exist with id :" + id));
+		
+		login.setAddress(loginDetails.getAddress());
+		login.setName(loginDetails.getName());
+		login.setEmail(loginDetails.getEmail());
+		login.setPassword(loginDetails.getPassword());
+		login.setPhone(loginDetails.getPhone());
+		login.setAdministrator(loginDetails.isAdministrator());
+		Login updatedLogin = loginRepository.save(login);
+		return ResponseEntity.ok(updatedLogin);
+	}
+	
+	// delete login rest api
+	@DeleteMapping("/login/{id}")
+	public ResponseEntity<Map<String, Boolean>> deleteLogin(@PathVariable int id){
+		Login login = loginRepository.findById(id)
+				.orElseThrow(() -> new ResourceNotFoundException("Login not exist with id :" + id));
+		
+		loginRepository.delete(login);
+		Map<String, Boolean> response = new HashMap<>();
+		response.put("deleted", Boolean.TRUE);
+		return ResponseEntity.ok(response);
+	}
 }

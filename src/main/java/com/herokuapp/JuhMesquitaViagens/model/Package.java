@@ -25,8 +25,6 @@ public class Package {
     @JoinColumn(name = "addressOrigin")
     private Address addressOrigin;
     @Column(nullable = false)
-    private int idLegal;
-    @Column(nullable = false)
     private String title;
     @Column(nullable = false)
     private int people;
@@ -42,13 +40,12 @@ public class Package {
     public Package() {
     }
 
-	public Package(int id, Address addressDestiny, Address addressOrigin, int idLegal, String title, int people,
-			double value, boolean promotion, Date dateGoing, Date dateReturn) {
+	public Package(int id, Address addressDestiny, Address addressOrigin, String title, int people, double value,
+			boolean promotion, Date dateGoing, Date dateReturn) {
 		super();
 		this.id = id;
 		this.addressDestiny = addressDestiny;
 		this.addressOrigin = addressOrigin;
-		this.idLegal = idLegal;
 		this.title = title;
 		this.people = people;
 		this.value = value;
@@ -79,14 +76,6 @@ public class Package {
 
 	public void setAddressOrigin(Address addressOrigin) {
 		this.addressOrigin = addressOrigin;
-	}
-
-	public int getIdLegal() {
-		return idLegal;
-	}
-
-	public void setIdLegal(int idLegal) {
-		this.idLegal = idLegal;
 	}
 
 	public String getTitle() {
@@ -139,8 +128,7 @@ public class Package {
 
 	@Override
 	public int hashCode() {
-		return Objects.hash(addressDestiny, addressOrigin, dateGoing, dateReturn, id, idLegal, people, promotion, title,
-				value);
+		return Objects.hash(addressDestiny, addressOrigin, dateGoing, dateReturn, id, people, promotion, title, value);
 	}
 
 	@Override
@@ -154,16 +142,16 @@ public class Package {
 		Package other = (Package) obj;
 		return Objects.equals(addressDestiny, other.addressDestiny)
 				&& Objects.equals(addressOrigin, other.addressOrigin) && Objects.equals(dateGoing, other.dateGoing)
-				&& Objects.equals(dateReturn, other.dateReturn) && id == other.id && idLegal == other.idLegal
-				&& people == other.people && promotion == other.promotion && Objects.equals(title, other.title)
+				&& Objects.equals(dateReturn, other.dateReturn) && id == other.id && people == other.people
+				&& promotion == other.promotion && Objects.equals(title, other.title)
 				&& Double.doubleToLongBits(value) == Double.doubleToLongBits(other.value);
 	}
 
 	@Override
 	public String toString() {
 		return "Package [id=" + id + ", addressDestiny=" + addressDestiny + ", addressOrigin=" + addressOrigin
-				+ ", idLegal=" + idLegal + ", title=" + title + ", people=" + people + ", value=" + value
-				+ ", promotion=" + promotion + ", dateGoing=" + dateGoing + ", dateReturn=" + dateReturn + "]";
-	}
+				+ ", title=" + title + ", people=" + people + ", value=" + value + ", promotion=" + promotion
+				+ ", dateGoing=" + dateGoing + ", dateReturn=" + dateReturn + "]";
+	}	
     
 }
