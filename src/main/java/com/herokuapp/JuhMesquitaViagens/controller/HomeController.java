@@ -9,6 +9,6 @@ import org.springframework.web.bind.annotation.RestController;
 public class HomeController {
 	@GetMapping
 	public String getHello() {
-		return "Estou funcionando! \n Meu FRONT : https://juhmesquitaviagens-front-end.herokuapp.com/";
+		return "Estou funcionando!  Aplicação online Front-End: https://juhmesquitaviagens-front-end.herokuapp.com/";
 	}
 }
