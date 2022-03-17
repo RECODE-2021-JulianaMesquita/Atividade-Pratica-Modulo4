@@ -28,19 +28,19 @@ public class PackageController {
 	private PackageRepository packageTravelRepository;
 	
 	// get all packageTravels
-	@GetMapping("/packageTravels")
+	@GetMapping("/all")
 	public List<Package> getAllPackages(){
 		return packageTravelRepository.findAll();
 	}		
 	
 	// create packageTravel rest api
-	@PostMapping("/packageTravels")
+	@PostMapping("/create")
 	public Package createPackage(@RequestBody Package packageTravel) {
 		return packageTravelRepository.save(packageTravel);
 	}
 	
 	// get packageTravel by id rest api
-	@GetMapping("/packageTravels/{id}")
+	@GetMapping("/details/{id}")
 	public ResponseEntity<Package> getPackageById(@PathVariable int id) {
 		Package packageTravel = packageTravelRepository.findById(id)
 				.orElseThrow(() -> new ResourceNotFoundException("Package not exist with id :" + id));
@@ -49,7 +49,7 @@ public class PackageController {
 	
 	// update packageTravel rest api
 	
-	@PutMapping("/packageTravels/{id}")
+	@PutMapping("/update/{id}")
 	public ResponseEntity<Package> updatePackage(@PathVariable int id, @RequestBody Package packageTravelDetails){
 		Package packageTravel = packageTravelRepository.findById(id)
 				.orElseThrow(() -> new ResourceNotFoundException("Package not exist with id :" + id));
@@ -66,7 +66,7 @@ public class PackageController {
 	}
 	
 	// delete packageTravel rest api
-	@DeleteMapping("/packageTravels/{id}")
+	@DeleteMapping("/delete/{id}")
 	public ResponseEntity<Map<String, Boolean>> deletePackage(@PathVariable int id){
 		Package packageTravel = packageTravelRepository.findById(id)
 				.orElseThrow(() -> new ResourceNotFoundException("Package not exist with id :" + id));

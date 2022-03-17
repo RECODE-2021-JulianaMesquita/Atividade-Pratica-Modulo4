@@ -28,19 +28,19 @@ public class LegalController {
 	private LegalRepository legalRepository;
 	
 	// get all legals
-	@GetMapping("/legals")
+	@GetMapping("/all")
 	public List<Legal> getAllLegals(){
 		return legalRepository.findAll();
 	}		
 	
 	// create legal rest api
-	@PostMapping("/legals")
+	@PostMapping("/create")
 	public Legal createLegal(@RequestBody Legal legal) {
 		return legalRepository.save(legal);
 	}
 	
 	// get legal by id rest api
-	@GetMapping("/legals/{id}")
+	@GetMapping("/details/{id}")
 	public ResponseEntity<Legal> getLegalById(@PathVariable int id) {
 		Legal legal = legalRepository.findById(id)
 				.orElseThrow(() -> new ResourceNotFoundException("Legal not exist with id :" + id));
@@ -49,7 +49,7 @@ public class LegalController {
 	
 	// update legal rest api
 	
-	@PutMapping("/legals/{id}")
+	@PutMapping("/update/{id}")
 	public ResponseEntity<Legal> updateLegal(@PathVariable int id, @RequestBody Legal legalDetails){
 		Legal legal = legalRepository.findById(id)
 				.orElseThrow(() -> new ResourceNotFoundException("Legal not exist with id :" + id));
@@ -66,7 +66,7 @@ public class LegalController {
 	}
 	
 	// delete legal rest api
-	@DeleteMapping("/legals/{id}")
+	@DeleteMapping("/delete/{id}")
 	public ResponseEntity<Map<String, Boolean>> deleteLegal(@PathVariable int id){
 		Legal legal = legalRepository.findById(id)
 				.orElseThrow(() -> new ResourceNotFoundException("Legal not exist with id :" + id));
