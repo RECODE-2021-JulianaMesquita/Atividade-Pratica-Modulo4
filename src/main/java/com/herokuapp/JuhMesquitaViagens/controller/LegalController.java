@@ -41,14 +41,14 @@ public class LegalController {
 
     // get empresa by id rest api
     @GetMapping("/legal/{id}")
-    public ResponseEntity <Legal> getLoginById(@PathVariable Long id) {
+    public ResponseEntity <Legal> getLoginById(@PathVariable int id) {
         Legal legalId = legalRepository.findById(id).orElseThrow(() -> new ResourceNotFoundException("Não existe no banco de dados empresa com o id = "  + id));
         return ResponseEntity.ok(legalId);
     }
 
     // update usuario rest api
     @PutMapping("/legal/{id}")
-     public ResponseEntity <Legal> updateLegal(@PathVariable Long id, @RequestBody Legal legalDetails) {
+     public ResponseEntity <Legal> updateLegal(@PathVariable int id, @RequestBody Legal legalDetails) {
         Legal legalEdit = legalRepository.findById(id).orElseThrow(() -> new ResourceNotFoundException("Não existe no banco de dados empresa com o id = "  + id));
  
         legalEdit.setCnpj(legalDetails.getCnpj());
@@ -59,7 +59,7 @@ public class LegalController {
 
     // delete empresa rest api
     @DeleteMapping("/legal/{id}")
-    public ResponseEntity<Map<String,Boolean>>deleteLegal(@PathVariable Long id) {
+    public ResponseEntity<Map<String,Boolean>>deleteLegal(@PathVariable int id) {
         Legal legalDelete = legalRepository.findById(id).orElseThrow(() -> new ResourceNotFoundException("Não existe no banco de dados empresa com o id = " + id));
         legalRepository.delete(legalDelete);
         Map < String, Boolean > response = new HashMap < > ();

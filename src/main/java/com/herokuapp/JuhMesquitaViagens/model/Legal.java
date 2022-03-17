@@ -8,7 +8,7 @@ import javax.persistence.Id;
 import javax.persistence.Table;
 
 @Entity
-@Table
+@Table(name = "legal")
 public class Legal extends Login {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
