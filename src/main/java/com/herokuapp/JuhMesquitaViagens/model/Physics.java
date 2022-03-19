@@ -80,7 +80,6 @@ public class Physics extends Login {
 	@Override
 	public String toString() {
 		return "Physics [id=" + id + ", cpf=" + cpf + ", packages=" + packages + "]";
-	}
-    
+	}   
 
 }

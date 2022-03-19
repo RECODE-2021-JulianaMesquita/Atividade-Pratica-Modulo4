@@ -36,6 +36,10 @@ public class Package {
     private Date dateGoing;
     @Column(nullable = false)
     private Date dateReturn;
+    @OneToOne
+    @JoinColumn(name = "legal")
+    private Legal legal;
+    
 
     public Package() {
     }
