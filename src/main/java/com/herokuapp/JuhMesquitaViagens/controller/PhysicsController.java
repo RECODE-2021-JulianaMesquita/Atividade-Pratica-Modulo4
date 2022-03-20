@@ -22,34 +22,33 @@ import com.herokuapp.JuhMesquitaViagens.repository.PhysicsRepository;
 
 @CrossOrigin(origins = "https://juhmesquitaviagens-front-end.herokuapp.com")
 @RestController
-@RequestMapping("/physics")
+@RequestMapping("/api/v1/")
 public class PhysicsController {
 	@Autowired
 	private PhysicsRepository physicsRepository;
 	
 	// get all physicss
-	@GetMapping("/all")
+	@GetMapping("/physics")
 	public List<Physics> getAllPhysicss(){
 		return physicsRepository.findAll();
 	}		
 	
 	// create physics rest api
-	@PostMapping("/create")
+	@PostMapping("/physics")
 	public Physics createPhysics(@RequestBody Physics physics) {
 		return physicsRepository.save(physics);
 	}
 	
 	// get physics by id rest api
-	@GetMapping("/details/{id}")
+	@GetMapping("/physics/{id}")
 	public ResponseEntity<Physics> getPhysicsById(@PathVariable int id) {
 		Physics physics = physicsRepository.findById(id)
 				.orElseThrow(() -> new ResourceNotFoundException("Physics not exist with id :" + id));
 		return ResponseEntity.ok(physics);
 	}
 	
-	// update physics rest api
-	
-	@PutMapping("/update/{id}")
+	// update physics rest api	
+	@PutMapping("/physics/{id}")
 	public ResponseEntity<Physics> updatePhysics(@PathVariable int id, @RequestBody Physics physicsDetails){
 		Physics physics = physicsRepository.findById(id)
 				.orElseThrow(() -> new ResourceNotFoundException("Physics not exist with id :" + id));
@@ -67,7 +66,7 @@ public class PhysicsController {
 	}
 	
 	// delete physics rest api
-	@DeleteMapping("/delete/{id}")
+	@DeleteMapping("/physics/{id}")
 	public ResponseEntity<Map<String, Boolean>> deletePhysics(@PathVariable int id){
 		Physics physics = physicsRepository.findById(id)
 				.orElseThrow(() -> new ResourceNotFoundException("Physics not exist with id :" + id));
