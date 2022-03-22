@@ -21,25 +21,25 @@ import com.herokuapp.JuhMesquitaViagens.repository.LegalRepository;
 
 @CrossOrigin(origins = "https://juhmesquitaviagens-front-end.herokuapp.com")
 @RestController
-@RequestMapping("/api/v1/")
+@RequestMapping("/legal")
 public class LegalController {
 	@Autowired
 	private LegalRepository legalRepository;
 	
 	// get all legals
-	@GetMapping("/legal")
+	@GetMapping("/")
 	public List<Legal> getAllLegals(){
 		return legalRepository.findAll();
 	}		
 	
 	// create legal rest api
-	@PostMapping("/legal")
+	@PostMapping("/create")
 	public Legal createLegal(@RequestBody Legal legal) {
 		return legalRepository.save(legal);
 	}
 	
 	// get legal by id rest api
-	@GetMapping("/legal/{id}")
+	@GetMapping("/getById/{id}")
 	public ResponseEntity<Legal> getLegalById(@PathVariable int id) {
 		Legal legal = legalRepository.findById(id)
 				.orElseThrow(() -> new ResourceNotFoundException("Legal not exist with id :" + id));
@@ -47,7 +47,7 @@ public class LegalController {
 	}
 	
 	// update legal rest api
-	@PutMapping("/legal/{id}")
+	@PutMapping("/update/{id}")
 	public ResponseEntity<Legal> updateLegal(@PathVariable int id, @RequestBody Legal legalDetails){
 		Legal legal = legalRepository.findById(id)
 				.orElseThrow(() -> new ResourceNotFoundException("Legal not exist with id :" + id));
@@ -64,7 +64,7 @@ public class LegalController {
 	}
 	
 	// delete legal rest api
-	@DeleteMapping("/legal/{id}")
+	@DeleteMapping("/delete/{id}")
 	public ResponseEntity<Map<String, Boolean>> deleteLegal(@PathVariable int id){
 		Legal legal = legalRepository.findById(id)
 				.orElseThrow(() -> new ResourceNotFoundException("Legal not exist with id :" + id));

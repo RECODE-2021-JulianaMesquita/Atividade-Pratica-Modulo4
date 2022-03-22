@@ -22,25 +22,25 @@ import com.herokuapp.JuhMesquitaViagens.repository.LoginRepository;
 
 @CrossOrigin(origins = "https://juhmesquitaviagens-front-end.herokuapp.com")
 @RestController
-@RequestMapping("/api/v1/")
+@RequestMapping("/login")
 public class LoginController {
 	@Autowired
 	private LoginRepository loginRepository;
 	
 	// get all logins
-	@GetMapping("/login")
+	@GetMapping("/")
 	public List<Login> getAllLogins(){
 		return loginRepository.findAll();
 	}		
 	
 	// create login rest api
-	@PostMapping("/login")
+	@PostMapping("/create")
 	public Login createLogin(@RequestBody Login login) {
 		return loginRepository.save(login);
 	}
 	
 	// get login by id rest api
-	@GetMapping("/login/{id}")
+	@GetMapping("/getById/{id}")
 	public ResponseEntity<Login> getLoginById(@PathVariable int id) {
 		Login login = loginRepository.findById(id)
 				.orElseThrow(() -> new ResourceNotFoundException("Login not exist with id :" + id));
@@ -48,7 +48,7 @@ public class LoginController {
 	}
 	
 	// update login rest api	
-	@PutMapping("/login/{id}")
+	@PutMapping("/update/{id}")
 	public ResponseEntity<Login> updateLogin(@PathVariable int id, @RequestBody Login loginDetails){
 		Login login = loginRepository.findById(id)
 				.orElseThrow(() -> new ResourceNotFoundException("Login not exist with id :" + id));
@@ -64,7 +64,7 @@ public class LoginController {
 	}
 	
 	// delete login rest api
-	@DeleteMapping("/login/{id}")
+	@DeleteMapping("/delete/{id}")
 	public ResponseEntity<Map<String, Boolean>> deleteLogin(@PathVariable int id){
 		Login login = loginRepository.findById(id)
 				.orElseThrow(() -> new ResourceNotFoundException("Login not exist with id :" + id));

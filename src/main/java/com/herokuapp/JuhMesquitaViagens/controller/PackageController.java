@@ -22,25 +22,25 @@ import com.herokuapp.JuhMesquitaViagens.repository.PackageRepository;
 
 @CrossOrigin(origins = "https://juhmesquitaviagens-front-end.herokuapp.com")
 @RestController
-@RequestMapping("/api/v1/")
+@RequestMapping("/packageTravel")
 public class PackageController {
 	@Autowired
 	private PackageRepository packageTravelRepository;
 	
 	// get all packageTravels
-	@GetMapping("/packageTravel")
+	@GetMapping("/")
 	public List<Package> getAllPackages(){
 		return packageTravelRepository.findAll();
 	}		
 	
 	// create packageTravel rest api
-	@PostMapping("/packageTravel")
+	@PostMapping("/create")
 	public Package createPackage(@RequestBody Package packageTravel) {
 		return packageTravelRepository.save(packageTravel);
 	}
 	
 	// get packageTravel by id rest api
-	@GetMapping("/packageTravel/{id}")
+	@GetMapping("/getById/{id}")
 	public ResponseEntity<Package> getPackageById(@PathVariable int id) {
 		Package packageTravel = packageTravelRepository.findById(id)
 				.orElseThrow(() -> new ResourceNotFoundException("Package not exist with id :" + id));
@@ -48,7 +48,7 @@ public class PackageController {
 	}
 	
 	// update packageTravel rest api	
-	@PutMapping("/packageTravel/{id}")
+	@PutMapping("/update/{id}")
 	public ResponseEntity<Package> updatePackage(@PathVariable int id, @RequestBody Package packageTravelDetails){
 		Package packageTravel = packageTravelRepository.findById(id)
 				.orElseThrow(() -> new ResourceNotFoundException("Package not exist with id :" + id));
@@ -65,7 +65,7 @@ public class PackageController {
 	}
 	
 	// delete packageTravel rest api
-	@DeleteMapping("/packageTravel/{id}")
+	@DeleteMapping("/delete/{id}")
 	public ResponseEntity<Map<String, Boolean>> deletePackage(@PathVariable int id){
 		Package packageTravel = packageTravelRepository.findById(id)
 				.orElseThrow(() -> new ResourceNotFoundException("Package not exist with id :" + id));

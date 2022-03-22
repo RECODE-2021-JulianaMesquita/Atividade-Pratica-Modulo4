@@ -22,24 +22,24 @@ import com.herokuapp.JuhMesquitaViagens.repository.AddressRepository;
 
 @CrossOrigin(origins = "https://juhmesquitaviagens-front-end.herokuapp.com")
 @RestController
-@RequestMapping("/api/v1/")
+@RequestMapping("address")
 public class AddressController {@Autowired
 	private AddressRepository addressRepository;
 	
 	// get all addresss
-	@GetMapping("address")
+	@GetMapping("/")
 	public List<Address> getAllAddresss(){
 		return addressRepository.findAll();
 	}		
 	
 	// create address rest api
-	@PostMapping("/address")
+	@PostMapping("/create")
 	public Address createAddress(@RequestBody Address address) {
 		return addressRepository.save(address);
 	}
 	
 	// get address by id rest api
-	@GetMapping("/address/{id}")
+	@GetMapping("/getById/{id}")
 	public ResponseEntity<Address> getAddressById(@PathVariable int id) {
 		Address address = addressRepository.findById(id)
 				.orElseThrow(() -> new ResourceNotFoundException("Address not exist with id :" + id));
@@ -47,7 +47,7 @@ public class AddressController {@Autowired
 	}
 	
 	// update address rest api
-	@PutMapping("/address/{id}")
+	@PutMapping("/update/{id}")
 	public ResponseEntity<Address> updateAddress(@PathVariable int id, @RequestBody Address addressDetails){
 		Address address = addressRepository.findById(id)
 				.orElseThrow(() -> new ResourceNotFoundException("Address not exist with id :" + id));
@@ -61,7 +61,7 @@ public class AddressController {@Autowired
 	}
 	
 	// delete address rest api
-	@DeleteMapping("/address/{id}")
+	@DeleteMapping("/delete/{id}")
 	public ResponseEntity<Map<String, Boolean>> deleteAddress(@PathVariable int id){
 		Address address = addressRepository.findById(id)
 				.orElseThrow(() -> new ResourceNotFoundException("Address not exist with id :" + id));
