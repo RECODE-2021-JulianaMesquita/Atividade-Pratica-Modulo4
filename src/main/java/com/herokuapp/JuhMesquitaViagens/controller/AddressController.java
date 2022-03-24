@@ -1,10 +1,11 @@
 package com.herokuapp.JuhMesquitaViagens.controller;
 
-import java.util.HashMap;
+import java.util.ArrayList;
 import java.util.List;
-import java.util.Map;
+import java.util.NoSuchElementException;
+import java.util.Optional;
 
-import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.CrossOrigin;
 import org.springframework.web.bind.annotation.DeleteMapping;
@@ -16,60 +17,66 @@ import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
-import com.herokuapp.JuhMesquitaViagens.exception.ResourceNotFoundException;
 import com.herokuapp.JuhMesquitaViagens.model.Address;
 import com.herokuapp.JuhMesquitaViagens.repository.AddressRepository;
 
 @CrossOrigin(origins = "https://juhmesquitaviagens-front-end.herokuapp.com")
 @RestController
-@RequestMapping("address")
-public class AddressController {@Autowired
+@RequestMapping("/address")
+public class AddressController {
+	
 	private AddressRepository addressRepository;
 	
-	// get all addresss
-	@GetMapping("/")
-	public List<Address> getAllAddresss(){
-		return addressRepository.findAll();
-	}		
-	
-	// create address rest api
-	@PostMapping("/create")
-	public Address createAddress(@RequestBody Address address) {
-		return addressRepository.save(address);
+	public AddressController(AddressRepository addressRepository) {
+		super();
+		this.addressRepository = addressRepository;
 	}
 	
-	// get address by id rest api
-	@GetMapping("/getById/{id}")
-	public ResponseEntity<Address> getAddressById(@PathVariable int id) {
-		Address address = addressRepository.findById(id)
-				.orElseThrow(() -> new ResourceNotFoundException("Address not exist with id :" + id));
-		return ResponseEntity.ok(address);
+	@PostMapping
+	public ResponseEntity<Address> save(@RequestBody Address address){
+		addressRepository.save(address);
+		return new ResponseEntity<>(address, HttpStatus.OK);
 	}
 	
-	// update address rest api
-	@PutMapping("/update/{id}")
-	public ResponseEntity<Address> updateAddress(@PathVariable int id, @RequestBody Address addressDetails){
-		Address address = addressRepository.findById(id)
-				.orElseThrow(() -> new ResourceNotFoundException("Address not exist with id :" + id));
-		
-		address.setState(addressDetails.getState());
-		address.setCountry(addressDetails.getCountry());
-		address.setMunicipality(addressDetails.getMunicipality());
-		address.setCode(addressDetails.getCode());
-		Address updatedAddress = addressRepository.save(address);
-		return ResponseEntity.ok(updatedAddress);
+	@GetMapping
+	public ResponseEntity<List<Address>> getAll(){
+		List<Address> addresss = new ArrayList<>();
+		addresss = addressRepository.findAll();
+		return new ResponseEntity<>(addresss, HttpStatus.OK);
 	}
 	
-	// delete address rest api
-	@DeleteMapping("/delete/{id}")
-	public ResponseEntity<Map<String, Boolean>> deleteAddress(@PathVariable int id){
-		Address address = addressRepository.findById(id)
-				.orElseThrow(() -> new ResourceNotFoundException("Address not exist with id :" + id));
-		
-		addressRepository.delete(address);
-		Map<String, Boolean> response = new HashMap<>();
-		response.put("deleted", Boolean.TRUE);
-		return ResponseEntity.ok(response);
-	}				   
+	@GetMapping(path="/{id}")
+	public ResponseEntity<Optional<Address>> getById(@PathVariable Integer id){
+		Optional<Address> address;
+		try {
+			address = addressRepository.findById(id);
+			return new ResponseEntity<Optional<Address>>(address, HttpStatus.OK);
+		}catch(NoSuchElementException nsee) {
+			return new ResponseEntity<Optional<Address>>(HttpStatus.NOT_FOUND);
+		}
+	}
+	
+	@DeleteMapping(path="/{id}")
+	public ResponseEntity<Optional<Address>> deleteById(@PathVariable Integer id){
+		try {
+			addressRepository.deleteById(id);
+			return new ResponseEntity<Optional<Address>>(HttpStatus.OK);
+		}catch(NoSuchElementException nsee){
+			return new ResponseEntity<Optional<Address>>(HttpStatus.NOT_FOUND);
+		}
+	}
+	
+	@PutMapping(value="/{id}")
+	public ResponseEntity<Address> update(@PathVariable Integer id, @RequestBody Address newAddress){
+		return addressRepository.findById(id)
+			   .map(address -> {
+				   address.setState(newAddress.getState());
+					address.setCountry(newAddress.getCountry());
+					address.setMunicipality(newAddress.getMunicipality());
+					address.setCode(newAddress.getCode());
+				   Address addressUpdate = addressRepository.save(address);
+				   return ResponseEntity.ok().body(addressUpdate);
+			   }).orElse(ResponseEntity.notFound().build());
+	}
 	
 }

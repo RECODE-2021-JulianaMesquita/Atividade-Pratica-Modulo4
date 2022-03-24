@@ -1,10 +1,11 @@
 package com.herokuapp.JuhMesquitaViagens.controller;
 
-import java.util.HashMap;
+import java.util.ArrayList;
 import java.util.List;
-import java.util.Map;
+import java.util.NoSuchElementException;
+import java.util.Optional;
 
-import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.CrossOrigin;
 import org.springframework.web.bind.annotation.DeleteMapping;
@@ -16,7 +17,6 @@ import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
-import com.herokuapp.JuhMesquitaViagens.exception.ResourceNotFoundException;
 import com.herokuapp.JuhMesquitaViagens.model.Login;
 import com.herokuapp.JuhMesquitaViagens.repository.LoginRepository;
 
@@ -24,54 +24,59 @@ import com.herokuapp.JuhMesquitaViagens.repository.LoginRepository;
 @RestController
 @RequestMapping("/login")
 public class LoginController {
-	@Autowired
 	private LoginRepository loginRepository;
 	
-	// get all logins
-	@GetMapping("/")
-	public List<Login> getAllLogins(){
-		return loginRepository.findAll();
-	}		
-	
-	// create login rest api
-	@PostMapping("/create")
-	public Login createLogin(@RequestBody Login login) {
-		return loginRepository.save(login);
+	public LoginController(LoginRepository loginRepository) {
+		super();
+		this.loginRepository = loginRepository;
 	}
 	
-	// get login by id rest api
-	@GetMapping("/getById/{id}")
-	public ResponseEntity<Login> getLoginById(@PathVariable int id) {
-		Login login = loginRepository.findById(id)
-				.orElseThrow(() -> new ResourceNotFoundException("Login not exist with id :" + id));
-		return ResponseEntity.ok(login);
+	@PostMapping
+	public ResponseEntity<Login> save(@RequestBody Login login){
+		loginRepository.save(login);
+		return new ResponseEntity<>(login, HttpStatus.OK);
 	}
 	
-	// update login rest api	
-	@PutMapping("/update/{id}")
-	public ResponseEntity<Login> updateLogin(@PathVariable int id, @RequestBody Login loginDetails){
-		Login login = loginRepository.findById(id)
-				.orElseThrow(() -> new ResourceNotFoundException("Login not exist with id :" + id));
-		
-		login.setAddress(loginDetails.getAddress());
-		login.setName(loginDetails.getName());
-		login.setEmail(loginDetails.getEmail());
-		login.setPassword(loginDetails.getPassword());
-		login.setPhone(loginDetails.getPhone());
-		login.setAdministrator(loginDetails.isAdministrator());
-		Login updatedLogin = loginRepository.save(login);
-		return ResponseEntity.ok(updatedLogin);
+	@GetMapping
+	public ResponseEntity<List<Login>> getAll(){
+		List<Login> logins = new ArrayList<>();
+		logins = loginRepository.findAll();
+		return new ResponseEntity<>(logins, HttpStatus.OK);
 	}
 	
-	// delete login rest api
-	@DeleteMapping("/delete/{id}")
-	public ResponseEntity<Map<String, Boolean>> deleteLogin(@PathVariable int id){
-		Login login = loginRepository.findById(id)
-				.orElseThrow(() -> new ResourceNotFoundException("Login not exist with id :" + id));
-		
-		loginRepository.delete(login);
-		Map<String, Boolean> response = new HashMap<>();
-		response.put("deleted", Boolean.TRUE);
-		return ResponseEntity.ok(response);
+	@GetMapping(path="/{id}")
+	public ResponseEntity<Optional<Login>> getById(@PathVariable Integer id){
+		Optional<Login> login;
+		try {
+			login = loginRepository.findById(id);
+			return new ResponseEntity<Optional<Login>>(login, HttpStatus.OK);
+		}catch(NoSuchElementException nsee) {
+			return new ResponseEntity<Optional<Login>>(HttpStatus.NOT_FOUND);
+		}
+	}
+	
+	@DeleteMapping(path="/{id}")
+	public ResponseEntity<Optional<Login>> deleteById(@PathVariable Integer id){
+		try {
+			loginRepository.deleteById(id);
+			return new ResponseEntity<Optional<Login>>(HttpStatus.OK);
+		}catch(NoSuchElementException nsee){
+			return new ResponseEntity<Optional<Login>>(HttpStatus.NOT_FOUND);
+		}
+	}
+	
+	@PutMapping(value="/{id}")
+	public ResponseEntity<Login> update(@PathVariable Integer id, @RequestBody Login newLogin){
+		return loginRepository.findById(id)
+			   .map(login -> {
+				   login.setAddress(newLogin.getAddress());
+					login.setName(newLogin.getName());
+					login.setEmail(newLogin.getEmail());
+					login.setPassword(newLogin.getPassword());
+					login.setPhone(newLogin.getPhone());
+					login.setAdministrator(newLogin.isAdministrator());
+				   Login loginUpdate = loginRepository.save(login);
+				   return ResponseEntity.ok().body(loginUpdate);
+			   }).orElse(ResponseEntity.notFound().build());
 	}
 }

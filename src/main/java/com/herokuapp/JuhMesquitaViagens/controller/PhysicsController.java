@@ -1,10 +1,14 @@
 package com.herokuapp.JuhMesquitaViagens.controller;
 
+import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+import java.util.NoSuchElementException;
+import java.util.Optional;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.CrossOrigin;
 import org.springframework.web.bind.annotation.DeleteMapping;
@@ -24,57 +28,63 @@ import com.herokuapp.JuhMesquitaViagens.repository.PhysicsRepository;
 @RestController
 @RequestMapping("/physics")
 public class PhysicsController {
-	@Autowired
 	private PhysicsRepository physicsRepository;
 	
-	// get all physicss
-	@GetMapping("/")
-	public List<Physics> getAllPhysicss(){
-		return physicsRepository.findAll();
-	}		
-	
-	// create physics rest api
-	@PostMapping("/create")
-	public Physics createPhysics(@RequestBody Physics physics) {
-		return physicsRepository.save(physics);
+	public PhysicsController(PhysicsRepository physicsRepository) {
+		super();
+		this.physicsRepository = physicsRepository;
 	}
 	
-	// get physics by id rest api
-	@GetMapping("/getById/{id}")
-	public ResponseEntity<Physics> getPhysicsById(@PathVariable int id) {
-		Physics physics = physicsRepository.findById(id)
-				.orElseThrow(() -> new ResourceNotFoundException("Physics not exist with id :" + id));
-		return ResponseEntity.ok(physics);
+	@PostMapping
+	public ResponseEntity<Physics> save(@RequestBody Physics physics){
+		physicsRepository.save(physics);
+		return new ResponseEntity<>(physics, HttpStatus.OK);
 	}
 	
-	// update physics rest api	
-	@PutMapping("/update/{id}")
-	public ResponseEntity<Physics> updatePhysics(@PathVariable int id, @RequestBody Physics physicsDetails){
-		Physics physics = physicsRepository.findById(id)
-				.orElseThrow(() -> new ResourceNotFoundException("Physics not exist with id :" + id));
+	@GetMapping
+	public ResponseEntity<List<Physics>> getAll(){
+		List<Physics> physicss = new ArrayList<>();
+		physicss = physicsRepository.findAll();
+		return new ResponseEntity<>(physicss, HttpStatus.OK);
+	}
+	
+	@GetMapping(path="/{id}")
+	public ResponseEntity<Optional<Physics>> getById(@PathVariable Integer id){
+		Optional<Physics> physics;
+		try {
+			physics = physicsRepository.findById(id);
+			return new ResponseEntity<Optional<Physics>>(physics, HttpStatus.OK);
+		}catch(NoSuchElementException nsee) {
+			return new ResponseEntity<Optional<Physics>>(HttpStatus.NOT_FOUND);
+		}
+	}
+	
+	@DeleteMapping(path="/{id}")
+	public ResponseEntity<Optional<Physics>> deleteById(@PathVariable Integer id){
+		try {
+			physicsRepository.deleteById(id);
+			return new ResponseEntity<Optional<Physics>>(HttpStatus.OK);
+		}catch(NoSuchElementException nsee){
+			return new ResponseEntity<Optional<Physics>>(HttpStatus.NOT_FOUND);
+		}
+	}
+	
+	@PutMapping(value="/{id}")
+	public ResponseEntity<Physics> update(@PathVariable Integer id, @RequestBody Physics newPhysics){
+		return physicsRepository.findById(id)
+			   .map(physics -> {
+				   physics.setAddress(newPhysics.getAddress());
+					physics.setName(newPhysics.getName());
+					physics.setEmail(newPhysics.getEmail());
+					physics.setPassword(newPhysics.getPassword());
+					physics.setPhone(newPhysics.getPhone());
+					physics.setAdministrator(newPhysics.isAdministrator());
+				   Physics physicsUpdate = physicsRepository.save(physics);
+				   return ResponseEntity.ok().body(physicsUpdate);
+			   }).orElse(ResponseEntity.notFound().build());
+	}
 		
-		physics.setAddress(physicsDetails.getAddress());
-		physics.setName(physicsDetails.getName());
-		physics.setEmail(physicsDetails.getEmail());
-		physics.setPassword(physicsDetails.getPassword());
-		physics.setPhone(physicsDetails.getPhone());
-		physics.setAdministrator(physicsDetails.isAdministrator());
-		physics.setCpf(physicsDetails.getCpf());
-		physics.setPackages(physicsDetails.getPackages());
-		Physics updatedPhysics = physicsRepository.save(physics);
-		return ResponseEntity.ok(updatedPhysics);
-	}
-	
-	// delete physics rest api
-	@DeleteMapping("/delete/{id}")
-	public ResponseEntity<Map<String, Boolean>> deletePhysics(@PathVariable int id){
-		Physics physics = physicsRepository.findById(id)
-				.orElseThrow(() -> new ResourceNotFoundException("Physics not exist with id :" + id));
-		
-		physicsRepository.delete(physics);
-		Map<String, Boolean> response = new HashMap<>();
-		response.put("deleted", Boolean.TRUE);
-		return ResponseEntity.ok(response);
-	}
+
+
 
 }

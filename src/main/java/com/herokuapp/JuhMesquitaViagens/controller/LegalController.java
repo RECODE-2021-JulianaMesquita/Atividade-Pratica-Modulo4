@@ -1,10 +1,11 @@
 package com.herokuapp.JuhMesquitaViagens.controller;
 
-import java.util.HashMap;
+import java.util.ArrayList;
 import java.util.List;
-import java.util.Map;
+import java.util.NoSuchElementException;
+import java.util.Optional;
 
-import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.CrossOrigin;
 import org.springframework.web.bind.annotation.DeleteMapping;
@@ -15,7 +16,7 @@ import org.springframework.web.bind.annotation.PutMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
-import com.herokuapp.JuhMesquitaViagens.exception.ResourceNotFoundException;
+
 import com.herokuapp.JuhMesquitaViagens.model.Legal;
 import com.herokuapp.JuhMesquitaViagens.repository.LegalRepository;
 
@@ -23,56 +24,60 @@ import com.herokuapp.JuhMesquitaViagens.repository.LegalRepository;
 @RestController
 @RequestMapping("/legal")
 public class LegalController {
-	@Autowired
 	private LegalRepository legalRepository;
 	
-	// get all legals
-	@GetMapping("/")
-	public List<Legal> getAllLegals(){
-		return legalRepository.findAll();
-	}		
-	
-	// create legal rest api
-	@PostMapping("/create")
-	public Legal createLegal(@RequestBody Legal legal) {
-		return legalRepository.save(legal);
+	public LegalController(LegalRepository legalRepository) {
+		super();
+		this.legalRepository = legalRepository;
 	}
 	
-	// get legal by id rest api
-	@GetMapping("/getById/{id}")
-	public ResponseEntity<Legal> getLegalById(@PathVariable int id) {
-		Legal legal = legalRepository.findById(id)
-				.orElseThrow(() -> new ResourceNotFoundException("Legal not exist with id :" + id));
-		return ResponseEntity.ok(legal);
+	@PostMapping
+	public ResponseEntity<Legal> save(@RequestBody Legal legal){
+		legalRepository.save(legal);
+		return new ResponseEntity<>(legal, HttpStatus.OK);
 	}
 	
-	// update legal rest api
-	@PutMapping("/update/{id}")
-	public ResponseEntity<Legal> updateLegal(@PathVariable int id, @RequestBody Legal legalDetails){
-		Legal legal = legalRepository.findById(id)
-				.orElseThrow(() -> new ResourceNotFoundException("Legal not exist with id :" + id));
-		
-		legal.setAddress(legalDetails.getAddress());
-		legal.setName(legalDetails.getName());
-		legal.setEmail(legalDetails.getEmail());
-		legal.setPassword(legalDetails.getPassword());
-		legal.setPhone(legalDetails.getPhone());
-		legal.setAdministrator(legalDetails.isAdministrator());
-		legal.setCnpj(legalDetails.getCnpj());
-		Legal updatedLegal = legalRepository.save(legal);
-		return ResponseEntity.ok(updatedLegal);
+	@GetMapping
+	public ResponseEntity<List<Legal>> getAll(){
+		List<Legal> legals = new ArrayList<>();
+		legals = legalRepository.findAll();
+		return new ResponseEntity<>(legals, HttpStatus.OK);
 	}
 	
-	// delete legal rest api
-	@DeleteMapping("/delete/{id}")
-	public ResponseEntity<Map<String, Boolean>> deleteLegal(@PathVariable int id){
-		Legal legal = legalRepository.findById(id)
-				.orElseThrow(() -> new ResourceNotFoundException("Legal not exist with id :" + id));
-		
-		legalRepository.delete(legal);
-		Map<String, Boolean> response = new HashMap<>();
-		response.put("deleted", Boolean.TRUE);
-		return ResponseEntity.ok(response);
+	@GetMapping(path="/{id}")
+	public ResponseEntity<Optional<Legal>> getById(@PathVariable Integer id){
+		Optional<Legal> legal;
+		try {
+			legal = legalRepository.findById(id);
+			return new ResponseEntity<Optional<Legal>>(legal, HttpStatus.OK);
+		}catch(NoSuchElementException nsee) {
+			return new ResponseEntity<Optional<Legal>>(HttpStatus.NOT_FOUND);
+		}
 	}
-
+	
+	@DeleteMapping(path="/{id}")
+	public ResponseEntity<Optional<Legal>> deleteById(@PathVariable Integer id){
+		try {
+			legalRepository.deleteById(id);
+			return new ResponseEntity<Optional<Legal>>(HttpStatus.OK);
+		}catch(NoSuchElementException nsee){
+			return new ResponseEntity<Optional<Legal>>(HttpStatus.NOT_FOUND);
+		}
+	}
+	
+	@PutMapping(value="/{id}")
+	public ResponseEntity<Legal> update(@PathVariable Integer id, @RequestBody Legal newLegal){
+		return legalRepository.findById(id)
+			   .map(legal -> {
+				   legal.setAddress(newLegal.getAddress());
+					legal.setName(newLegal.getName());
+					legal.setEmail(newLegal.getEmail());
+					legal.setPassword(newLegal.getPassword());
+					legal.setPhone(newLegal.getPhone());
+					legal.setAdministrator(newLegal.isAdministrator());
+					legal.setCnpj(newLegal.getCnpj());
+				   Legal legalUpdate = legalRepository.save(legal);
+				   return ResponseEntity.ok().body(legalUpdate);
+			   }).orElse(ResponseEntity.notFound().build());
+	}	
 }

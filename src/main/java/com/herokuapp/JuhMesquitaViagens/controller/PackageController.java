@@ -1,10 +1,14 @@
 package com.herokuapp.JuhMesquitaViagens.controller;
 
+import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+import java.util.NoSuchElementException;
+import java.util.Optional;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.CrossOrigin;
 import org.springframework.web.bind.annotation.DeleteMapping;
@@ -24,55 +28,61 @@ import com.herokuapp.JuhMesquitaViagens.repository.PackageRepository;
 @RestController
 @RequestMapping("/packageTravel")
 public class PackageController {
-	@Autowired
 	private PackageRepository packageTravelRepository;
 	
-	// get all packageTravels
-	@GetMapping("/")
-	public List<Package> getAllPackages(){
-		return packageTravelRepository.findAll();
-	}		
-	
-	// create packageTravel rest api
-	@PostMapping("/create")
-	public Package createPackage(@RequestBody Package packageTravel) {
-		return packageTravelRepository.save(packageTravel);
+	public PackageController(PackageRepository packageTravelRepository) {
+		super();
+		this.packageTravelRepository = packageTravelRepository;
 	}
 	
-	// get packageTravel by id rest api
-	@GetMapping("/getById/{id}")
-	public ResponseEntity<Package> getPackageById(@PathVariable int id) {
-		Package packageTravel = packageTravelRepository.findById(id)
-				.orElseThrow(() -> new ResourceNotFoundException("Package not exist with id :" + id));
-		return ResponseEntity.ok(packageTravel);
+	@PostMapping
+	public ResponseEntity<Package> save(@RequestBody Package packageTravel){
+		packageTravelRepository.save(packageTravel);
+		return new ResponseEntity<>(packageTravel, HttpStatus.OK);
 	}
 	
-	// update packageTravel rest api	
-	@PutMapping("/update/{id}")
-	public ResponseEntity<Package> updatePackage(@PathVariable int id, @RequestBody Package packageTravelDetails){
-		Package packageTravel = packageTravelRepository.findById(id)
-				.orElseThrow(() -> new ResourceNotFoundException("Package not exist with id :" + id));
-		packageTravel.setAddressDestiny(packageTravelDetails.getAddressDestiny());
-		packageTravel.setAddressOrigin(packageTravelDetails.getAddressOrigin());
-		packageTravel.setTitle(packageTravelDetails.getTitle());
-		packageTravel.setPeople(packageTravelDetails.getPeople());
-		packageTravel.setValue(packageTravelDetails.getValue());
-		packageTravel.setPromotion(packageTravelDetails.isPromotion());
-		packageTravel.setDateGoing(packageTravelDetails.getDateGoing());
-		packageTravel.setDateReturn(packageTravelDetails.getDateReturn());
-		Package updatedPackage = packageTravelRepository.save(packageTravel);
-		return ResponseEntity.ok(updatedPackage);
+	@GetMapping
+	public ResponseEntity<List<Package>> getAll(){
+		List<Package> packageTravels = new ArrayList<>();
+		packageTravels = packageTravelRepository.findAll();
+		return new ResponseEntity<>(packageTravels, HttpStatus.OK);
 	}
 	
-	// delete packageTravel rest api
-	@DeleteMapping("/delete/{id}")
-	public ResponseEntity<Map<String, Boolean>> deletePackage(@PathVariable int id){
-		Package packageTravel = packageTravelRepository.findById(id)
-				.orElseThrow(() -> new ResourceNotFoundException("Package not exist with id :" + id));
-		
-		packageTravelRepository.delete(packageTravel);
-		Map<String, Boolean> response = new HashMap<>();
-		response.put("deleted", Boolean.TRUE);
-		return ResponseEntity.ok(response);
+	@GetMapping(path="/{id}")
+	public ResponseEntity<Optional<Package>> getById(@PathVariable Integer id){
+		Optional<Package> packageTravel;
+		try {
+			packageTravel = packageTravelRepository.findById(id);
+			return new ResponseEntity<Optional<Package>>(packageTravel, HttpStatus.OK);
+		}catch(NoSuchElementException nsee) {
+			return new ResponseEntity<Optional<Package>>(HttpStatus.NOT_FOUND);
+		}
+	}
+	
+	@DeleteMapping(path="/{id}")
+	public ResponseEntity<Optional<Package>> deleteById(@PathVariable Integer id){
+		try {
+			packageTravelRepository.deleteById(id);
+			return new ResponseEntity<Optional<Package>>(HttpStatus.OK);
+		}catch(NoSuchElementException nsee){
+			return new ResponseEntity<Optional<Package>>(HttpStatus.NOT_FOUND);
+		}
+	}
+	
+	@PutMapping(value="/{id}")
+	public ResponseEntity<Package> update(@PathVariable Integer id, @RequestBody Package newPackageTravel){
+		return packageTravelRepository.findById(id)
+			   .map(packageTravel -> {
+				   packageTravel.setAddressDestiny(newPackageTravel.getAddressDestiny());
+					packageTravel.setAddressOrigin(newPackageTravel.getAddressOrigin());
+					packageTravel.setTitle(newPackageTravel.getTitle());
+					packageTravel.setPeople(newPackageTravel.getPeople());
+					packageTravel.setValue(newPackageTravel.getValue());
+					packageTravel.setPromotion(newPackageTravel.isPromotion());
+					packageTravel.setDateGoing(newPackageTravel.getDateGoing());
+					packageTravel.setDateReturn(newPackageTravel.getDateReturn());
+				   Package packageTravelUpdate = packageTravelRepository.save(packageTravel);
+				   return ResponseEntity.ok().body(packageTravelUpdate);
+			   }).orElse(ResponseEntity.notFound().build());
 	}
 }
