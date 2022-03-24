@@ -36,14 +36,10 @@ public class Package {
     private Date dateGoing;
     @Column(nullable = false)
     private Date dateReturn;
-    @OneToOne
-    @JoinColumn(name = "legal")
-    private Legal legal;
     
-
     public Package() {
     }
-
+    
 	public Package(int id, Address addressDestiny, Address addressOrigin, String title, int people, double value,
 			boolean promotion, Date dateGoing, Date dateReturn) {
 		super();
@@ -156,6 +152,6 @@ public class Package {
 		return "Package [id=" + id + ", addressDestiny=" + addressDestiny + ", addressOrigin=" + addressOrigin
 				+ ", title=" + title + ", people=" + people + ", value=" + value + ", promotion=" + promotion
 				+ ", dateGoing=" + dateGoing + ", dateReturn=" + dateReturn + "]";
-	}	
-    
+	}
+	
 }
