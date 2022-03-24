@@ -22,7 +22,7 @@ import com.herokuapp.JuhMesquitaViagens.repository.LoginRepository;
 
 @CrossOrigin(origins = "https://juhmesquitaviagens-front-end.herokuapp.com")
 @RestController
-@RequestMapping("/login")
+@RequestMapping(value="/login")
 public class LoginController {
 	private LoginRepository loginRepository;
 	
@@ -74,7 +74,7 @@ public class LoginController {
 					login.setEmail(newLogin.getEmail());
 					login.setPassword(newLogin.getPassword());
 					login.setPhone(newLogin.getPhone());
-					login.setAdministrator(newLogin.isAdministrator());
+					login.setDescrition(newLogin.getDescrition());
 				   Login loginUpdate = loginRepository.save(login);
 				   return ResponseEntity.ok().body(loginUpdate);
 			   }).orElse(ResponseEntity.notFound().build());

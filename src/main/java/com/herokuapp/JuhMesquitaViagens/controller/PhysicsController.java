@@ -74,7 +74,7 @@ public class PhysicsController {
 					physics.setEmail(newPhysics.getEmail());
 					physics.setPassword(newPhysics.getPassword());
 					physics.setPhone(newPhysics.getPhone());
-					physics.setAdministrator(newPhysics.isAdministrator());
+					physics.setDescrition(newPhysics.getDescrition());
 				   Physics physicsUpdate = physicsRepository.save(physics);
 				   return ResponseEntity.ok().body(physicsUpdate);
 			   }).orElse(ResponseEntity.notFound().build());

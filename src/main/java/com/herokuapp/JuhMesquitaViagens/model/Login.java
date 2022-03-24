@@ -29,13 +29,12 @@ public class Login {
     @Column(nullable = false)
     private String phone;
     @Column(nullable = false)
-    private boolean administrator;
+    private String descrition;
 
     public Login() {
     }
 
-	public Login(int id, Address address, String name, String email, String password, String phone,
-			boolean administrator) {
+	public Login(int id, Address address, String name, String email, String password, String phone, String descrition) {
 		super();
 		this.id = id;
 		this.address = address;
@@ -43,7 +42,7 @@ public class Login {
 		this.email = email;
 		this.password = password;
 		this.phone = phone;
-		this.administrator = administrator;
+		this.descrition = descrition;
 	}
 
 	public int getId() {
@@ -94,17 +93,17 @@ public class Login {
 		this.phone = phone;
 	}
 
-	public boolean isAdministrator() {
-		return administrator;
+	public String getDescrition() {
+		return descrition;
 	}
 
-	public void setAdministrator(boolean administrator) {
-		this.administrator = administrator;
+	public void setDescrition(String descrition) {
+		this.descrition = descrition;
 	}
 
 	@Override
 	public int hashCode() {
-		return Objects.hash(address, administrator, email, id, name, password, phone);
+		return Objects.hash(address, descrition, email, id, name, password, phone);
 	}
 
 	@Override
@@ -116,7 +115,7 @@ public class Login {
 		if (getClass() != obj.getClass())
 			return false;
 		Login other = (Login) obj;
-		return Objects.equals(address, other.address) && administrator == other.administrator
+		return Objects.equals(address, other.address) && Objects.equals(descrition, other.descrition)
 				&& Objects.equals(email, other.email) && id == other.id && Objects.equals(name, other.name)
 				&& Objects.equals(password, other.password) && Objects.equals(phone, other.phone);
 	}
@@ -124,7 +123,7 @@ public class Login {
 	@Override
 	public String toString() {
 		return "Login [id=" + id + ", address=" + address + ", name=" + name + ", email=" + email + ", password="
-				+ password + ", phone=" + phone + ", administrator=" + administrator + "]";
-	}    
+				+ password + ", phone=" + phone + ", descrition=" + descrition + "]";
+	}
 
 }

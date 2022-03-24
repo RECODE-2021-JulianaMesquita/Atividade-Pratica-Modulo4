@@ -74,7 +74,7 @@ public class LegalController {
 					legal.setEmail(newLegal.getEmail());
 					legal.setPassword(newLegal.getPassword());
 					legal.setPhone(newLegal.getPhone());
-					legal.setAdministrator(newLegal.isAdministrator());
+					legal.setDescrition(newLegal.getDescrition());
 					legal.setCnpj(newLegal.getCnpj());
 				   Legal legalUpdate = legalRepository.save(legal);
 				   return ResponseEntity.ok().body(legalUpdate);
