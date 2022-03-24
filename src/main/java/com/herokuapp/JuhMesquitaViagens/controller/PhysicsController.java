@@ -1,13 +1,10 @@
 package com.herokuapp.JuhMesquitaViagens.controller;
 
 import java.util.ArrayList;
-import java.util.HashMap;
 import java.util.List;
-import java.util.Map;
 import java.util.NoSuchElementException;
 import java.util.Optional;
 
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.CrossOrigin;
@@ -20,13 +17,12 @@ import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
-import com.herokuapp.JuhMesquitaViagens.exception.ResourceNotFoundException;
 import com.herokuapp.JuhMesquitaViagens.model.Physics;
 import com.herokuapp.JuhMesquitaViagens.repository.PhysicsRepository;
 
 @CrossOrigin(origins = "https://juhmesquitaviagens-front-end.herokuapp.com")
 @RestController
-@RequestMapping("/physics")
+@RequestMapping(value="/physics")
 public class PhysicsController {
 	private PhysicsRepository physicsRepository;
 	

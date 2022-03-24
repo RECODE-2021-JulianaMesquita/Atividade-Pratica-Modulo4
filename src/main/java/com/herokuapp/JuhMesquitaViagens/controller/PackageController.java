@@ -26,7 +26,7 @@ import com.herokuapp.JuhMesquitaViagens.repository.PackageRepository;
 
 @CrossOrigin(origins = "https://juhmesquitaviagens-front-end.herokuapp.com")
 @RestController
-@RequestMapping("/packageTravel")
+@RequestMapping(value="/packageTravel")
 public class PackageController {
 	private PackageRepository packageTravelRepository;
 	

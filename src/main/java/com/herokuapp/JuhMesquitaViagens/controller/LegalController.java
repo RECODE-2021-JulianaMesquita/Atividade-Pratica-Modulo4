@@ -22,7 +22,7 @@ import com.herokuapp.JuhMesquitaViagens.repository.LegalRepository;
 
 @CrossOrigin(origins = "https://juhmesquitaviagens-front-end.herokuapp.com")
 @RestController
-@RequestMapping("/legal")
+@RequestMapping(value="/legal")
 public class LegalController {
 	private LegalRepository legalRepository;
 	

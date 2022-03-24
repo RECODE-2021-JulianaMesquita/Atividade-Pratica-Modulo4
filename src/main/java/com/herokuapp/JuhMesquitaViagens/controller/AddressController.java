@@ -22,7 +22,7 @@ import com.herokuapp.JuhMesquitaViagens.repository.AddressRepository;
 
 @CrossOrigin(origins = "https://juhmesquitaviagens-front-end.herokuapp.com")
 @RestController
-@RequestMapping("/address")
+@RequestMapping(value="/address")
 public class AddressController {
 	
 	private AddressRepository addressRepository;
